@@ -1,0 +1,134 @@
+
+<div ng-controller="chat" id="outer-chat-window">
+  <section class="chat-window" id="chat">
+    <div id="responsive-heads">
+      <h3 class="recent" data-panel="groupbar">Recent</h3>
+      <h3 class="search" data-panel="chat-search-pane">Search</h3>
+      <h3 class="chat-head active" data-panel="chat-panel">Chat...</h3>
+    </div>
+    <section>
+      <div id="lookup-panel">
+        <div id='lookup-header'>
+          <h3 class="lookup-title recent active"><a href="javascript:void(0)">Recent</a></h3>
+          <h3 class="lookup-title search"><a href="javascript:void(0)">Search</a></h3>
+        </div>
+        <div id="chat-search-pane" class="lookup-col-container">
+          <form id="chat-search">
+            <label>Search for users</label>
+
+            <div ng-controller="iris-template" ng-iris-template="users">
+
+              <input id="chat-search-field" />
+
+              <ul>
+                  
+                <li data-userid="{[{user.eid}]}" ng-bind-html="userSearchItem(user)" class="user" ng-repeat="user in users" ng-if="user.eid != credentials.userid"></li>
+
+              </ul>
+            
+            </div>
+          </form>
+
+        </div>
+
+        <div id='groupbar' class="lookup-col-container open">
+          <div ng-controller="iris-template" ng-iris-template="groups">
+            <ul id='grouplist' class="lookup-col">
+
+              <li class="group" data-group="{[{group.eid}]}" ng-bind-html="recentGroupItem(group)" class="group" ng-repeat="group in groups"></li>
+
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      <div id="chat-panel" class="active">
+
+        <div class="mediacall-window-surround window-surround" style="display: none;">
+          <div class="calling"><span class="glyphicon glyphicon-earphone"></span><span><?php print t('Calling'); ?></span></div>
+          <div id='mediacall-window'></div>
+          <ul id='mediacallbuttons'>
+            <li id="hangup" class='group-action group-action-hangup' style="display:none;" title="Hang up"><a href='javascript:void(0)'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Hang up</a>
+            </li>
+          </ul>
+        </div>
+
+        <div id="conversation-wrapper">
+          <div id='group-header'>
+            <h2>Chat...</h2>
+            <div class="member-count-surround">
+              
+              <div class="closed" ng-controller="iris-template" ng-iris-template="members">
+                <span class="members-view glyphicon glyphicon-user"></span><span id='member-count' ng-bind="members[0].field_users.length"></span>
+                <ul>
+                <li ng-repeat="member in members[0].field_users" ng-bind-html="listMembersDisplay(member)" ng-bind="member.field_uid"></li>
+                </ul>
+              </div>
+            </div>
+            <div class="meeting-window-surround window-surround" style="display: none;">
+              <h3>Meeting</h3>
+              <div id="meeting-window"></div>
+            </div>
+          </div>
+          <div id='conversation' data-groupid>
+
+            <div class="conversation-inner" ng-controller="iris-template" ng-iris-template="messages">
+
+              <div class="message-window" ng-if="messages">
+
+                <ul>
+                  <li ng-repeat="message in messages" ng-bind="message.content"></li>
+                </ul>
+
+                <form class='submit-message-from'>
+
+                  <input class='message-send' type='submit' value='send' />
+                  <div class='submit-message-box'>
+                    <span id="typing"></span>
+                    <input class='message-textfield' id='messageinput' name="message" autocomplete='off' />
+                  </div>
+                </form>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- The below buttons have yet to be implemented -->
+          <ul class='group-actions'>
+            <li class='group-action group-action-in-bar group-action-add-user' style="display:none;">
+              <a><span class='glyphicon glyphicon-plus' aria-hidden='true'></span>Add user</a>
+            </li>
+            <li class='group-action group-action-in-bar group-action-rename' style="display:none;">
+              <a><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span>Rename group</a>
+            </li>
+            <li class='group-action group-action-in-bar group-action-leave' style="display:none;">
+              <a><span class='glyphicon glyphicon-log-out' aria-hidden='true'></span>Leave group</a>
+            </li>
+            <li class='group-action group-action-in-bar group-action-send-file' style="display:none;">
+              <a><span class="glyphicon glyphicon-file" aria-hidden="true"></span>Send file</a>
+            </li>
+            <li class='group-action group-action-in-bar group-action-voicecall' style="display:none;">
+              <a><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>Call></a>
+            </li>
+            <li class='group-action group-action-in-bar group-action-videocall' style="display:none;">
+              <a><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>Video call</a>
+            </li>
+          </ul>
+
+          <div id="fileupload" style="display: none">
+            <input type="file" id="files" name="files[]" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <div class="chat-window">
+    <?php if (arg(0) != 'chat') : ?>
+      <div id="popout-link">
+        <a target="_blank" href="javascript:void(0)">Open in popout <i class="glyphicon glyphicon-new-window"></i></a>
+      </div>
+      <?php endif; ?>
+  </div>
+</div>
