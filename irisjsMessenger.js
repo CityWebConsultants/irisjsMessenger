@@ -244,7 +244,36 @@ iris.modules.irisjsMessenger.registerHook("hook_block_render", 0, function (this
       rank: 2
     };
 
-    thisHook.pass('it works');
+    thisHook.context.context.tags.headTags["handlebars"] = {
+      type: "script",
+      attributes: {
+        "src": "/modules/entity/handlebars.min.js"
+      },
+      rank: -1
+    }
+
+    thisHook.context.context.tags.headTags["entity_fetch"] = {
+      type: "script",
+      attributes: {
+        "src": "/modules/entity/templates.js"
+      },
+      rank: 0
+    };
+
+    iris.modules.frontend.globals.parseTemplateFile(['irisjs-messenger'], null, {
+    }, thisHook.authPass).then(function (success) {
+
+      thisHook.pass(success);
+
+    }, function (fail) {
+
+      thisHook.fail(fail);
+
+      iris.log("error", fail);
+
+    });
+
+
 
   }
   else {

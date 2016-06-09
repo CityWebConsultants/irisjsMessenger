@@ -17,7 +17,6 @@
         return $sce.trustAsHtml(iris.theme.listMembersDisplay(member, $scope));
       }
 
-      iris.server = 'http://localhost:4001';
       iris.currentGroup = null;
       $scope.currentGroup = iris.currentGroup;
 
