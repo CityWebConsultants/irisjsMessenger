@@ -438,3 +438,15 @@ iris.theme.MeetingAgendaChecklist = function (agenda, entityref) {
   return html;
 
 }
+
+iris.theme.getUserInfo = function(eid){
+
+	var user = iris.fetched.users.entities.filter(function(obj) {
+	      if(obj.eid == eid) {   
+	    	  return obj;
+	      }
+	    })[0];
+  return user;
+	
+	
+};

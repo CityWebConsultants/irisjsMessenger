@@ -38,7 +38,6 @@
       iris.chatReciever = io(iris.server);
 
       iris.chatReciever.on('userConnect', function (uid) {
-
         if (uid !== iris.credentials.userid) {
           iris.updateGroupOnline(parseInt(uid), 'online');
           iris.entityListUpdate.detail = {
@@ -60,10 +59,32 @@
           document.dispatchEvent(iris.entityListUpdate);
         }
       });
+
+      iris.chatReciever.on('messageReceived', function (groups) {
+        
+        if (groups) {
+          iris.entityListUpdate.detail = {
+            entities: {}
+          };
+          iris.fetchEntities("messages", {
+            entities: ["message"],
+            queries: [{
+              "field": "groups",
+              "operator": "includes",
+              "value": groups[0]
+            }],
+            sort: {
+              field_created: 'asc'
+            }
+
+          });
+          document.dispatchEvent(iris.entityListUpdate);
+        }
+
+      });
     }
 
     document.addEventListener('entityListUpdate', function (e) {
-
       if (e.detail.entities.message) {
         if ($('.message-window ul')[0]) {
           $('.message-window ul')[0].scrollTop = $('.message-window ul')[0].scrollHeight;
@@ -153,9 +174,7 @@
     }
 
     $("body").on("click", "#grouplist .group", function (e) {
-
       var groupid = jQuery(this).data("group");
-
       $.get(iris.server + '/read-group/' + groupid + '/' + iris.credentials.userid);
       iris.currentGroup = groupid;
       iris.setActiveGroup(groupid, false);
@@ -205,7 +224,7 @@
     // Search for users
 
     $("body").on("keyup", "#chat-search-field", function () {
-
+     
       var value = $("#chat-search-field").val();
 
       if (value.length) {
@@ -239,19 +258,19 @@
 
     // Create new group by selecting user from search results.
     $('body').on('click', '#chat-search li span:not(.add)', function (e) {
-
+      
       var current_uid = iris.credentials.userid;
       var selected_uid = jQuery(this).parent().data('userid');
-
-      var groupId = iris.groupExists(selected_uid)
+     
+      var groupId = iris.groupExists(selected_uid);
       if (groupId) {
         iris.togglerecent();
+        
         $('#grouplist .group[data-group=' + groupId + ']').click();
         return false;
       }
 
       var entity = {
-        name: iris.generateGroupName([current_uid, selected_uid]),
         field_121: true,
         field_users: [{
           field_uid: current_uid
