@@ -50,6 +50,18 @@
         data: entity,
         success: function (group, status) {
           if (group) {
+            iris.fetchEntities("groups", {
+              entities: ["group"],
+              queries: [{
+                "field": "field_users.field_uid",
+                "operator": "IS",
+                "value": iris.credentials.userid
+              }],
+              sort: {
+                "field_last_updated": "desc"
+              },
+
+            });
             iris.setActiveGroup(group.eid);
           }
         },
@@ -82,7 +94,7 @@
 
     iris.generateGroupName = function (users) {
       users.sort();
-      return '|user:' + users.join('-');
+      return 'group:' + users.join('-');
     }
 
     iris.getGroupUserIds = function (fieldset) {
@@ -102,22 +114,22 @@
     }
 
     iris.groupExists = function (uid) {
-      if (iris.fetched.groups && iris.fetched.groups.entities) {
-        for (var i = 0; i < iris.fetched.groups.entities.length; i++) {
-          //jQuery.each(iris.fetched.groups.entities, function (index, group) {
-          if (iris.fetched.groups.entities[i].field_121 === true) {
-            for (var j = 0; j < iris.fetched.groups.entities[i].field_users.length; j++) {
-              //jQuery.each(group.field_users, function (inner, user) {
-              if (iris.fetched.groups.entities[i].field_users[j].field_uid == uid) {
-                return iris.fetched.groups.entities[i].eid;
-              }
-              //});
-            }
+
+      var group = iris.fetched.groups.entities.filter(function(group) {
+        var user  = group.field_users.filter(function(user){
+          if(user.field_uid === uid){
+            return user;
           }
-          //});
+        })[0];
+        if(user){
+          return group;
         }
-        return false;
-      } else {
+
+	    })[0];
+      if(group){
+        return group.eid;
+      }
+      else{
         return false;
       }
     }
@@ -128,8 +140,11 @@
           content: content,
           groups: groups
         },
+        function( data ) {
+          
+          iris.chatReciever.emit('messageSent',groups);
+        },
         'json');
-
     }
 
     iris.togglesearch = function () {

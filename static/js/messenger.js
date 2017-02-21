@@ -14,12 +14,17 @@
       }
 
       $scope.listMembersDisplay = function (member) {
+    
         return $sce.trustAsHtml(iris.theme.listMembersDisplay(member, $scope));
       }
+      
+      $scope.displayUser = function (eid) {
+    	  return iris.theme.getUserInfo(eid);
+        }
 
       iris.currentGroup = null;
       $scope.currentGroup = iris.currentGroup;
-
+      
       iris.fetchEntities("groups", {
         entities: ["group"],
         queries: [{

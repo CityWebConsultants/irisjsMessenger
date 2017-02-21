@@ -210,6 +210,12 @@ iris.modules.irisjsMessenger.registerHook("hook_socket_disconnected", 1, functio
 
 });
 
+iris.modules.irisjsMessenger.registerSocketListener("messageSent", function(socket,data){
+  console.log("you got it");
+  iris.sendSocketMessage(['*'], 'messageReceived', data);
+
+})
+
 iris.modules.irisjsMessenger.registerHook("hook_block_render", 0, function (thisHook, data) {
 
   if (thisHook.context.id === "irisjs-messenger-chat-window") {
@@ -229,6 +235,12 @@ iris.modules.irisjsMessenger.registerHook("hook_block_render", 0, function (this
     thisHook.context.context.tags.headTags["messenger.helpers"] = {
       type: "script",
       attributes: {"src": "/modules/irisjsMessenger/js/messenger.helpers.js"},
+      rank: 2
+    };
+
+    thisHook.context.context.tags.headTags["messenger.hook"] = {
+      type: "script",
+      attributes: {"src": "/modules/irisjsMessenger/js/messenger.hook.js"},
       rank: 2
     };
 
