@@ -271,6 +271,7 @@
       }
 
       var entity = {
+        name: iris.generateGroupName([current_uid, selected_uid]),
         field_121: true,
         field_users: [{
           field_uid: current_uid

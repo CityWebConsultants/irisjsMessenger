@@ -94,7 +94,7 @@
 
     iris.generateGroupName = function (users) {
       users.sort();
-      return 'group:' + users.join('-');
+      return '|user:' + users.join('-');
     }
 
     iris.getGroupUserIds = function (fieldset) {
