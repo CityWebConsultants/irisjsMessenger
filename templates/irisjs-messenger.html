@@ -34,13 +34,15 @@
         <div id='groupbar' class="lookup-col-container open">
           <div ng-controller="iris-template" ng-iris-template="groups">
             <ul id='grouplist' class="lookup-col">
+              <!--
                <li data-group="{[{group.eid}]}" class="group" ng-repeat="group in groups">
                   <span class="image-container online-surround ">
                     <img src="{[{group.field_avatar}]}">  
                   </span> 
                    <span ng-bind="group.name || 'group ' + group.eid"></span> <span class="unread"></span>
                 </li>
-              <!--  <li class="group" data-group="{[{group.eid}]}" ng-bind-html="recentGroupItem(group)" class="group" ng-repeat="group in groups"></li> -->
+                -->
+                <li class="group" data-group="{[{group.eid}]}" ng-bind-html="recentGroupItem(group)" class="group" ng-repeat="group in groups"></li> 
 
             </ul>
           </div>

@@ -64,7 +64,6 @@ iris.theme.ChatMessage = function (message) {
     html += '</span>';
   }
   html += '</div>';
-
   return html;
 };
 
