@@ -243,12 +243,7 @@
 
         iris.fetchEntities("users", {
 
-          entities: ["user"],
-          queries: [{
-            "field": "username",
-            "operator": "is",
-            "value": "empty"
-                    }]
+          entities: ["user"]
 
         });
       }
