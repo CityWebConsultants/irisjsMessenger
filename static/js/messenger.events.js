@@ -60,7 +60,7 @@
         }
       });
 
-      iris.chatReciever.on('messageReceived', function (groups) {
+      /*iris.chatReciever.on('messageReceived', function (groups) {
         
         if (groups) {
           iris.entityListUpdate.detail = {
@@ -81,16 +81,20 @@
           document.dispatchEvent(iris.entityListUpdate);
         }
 
-      });
+      });*/
     }
 
     document.addEventListener('entityListUpdate', function (e) {
       if (e.detail.entities.message) {
-        if ($('.message-window ul')[0]) {
-          $('.message-window ul')[0].scrollTop = $('.message-window ul')[0].scrollHeight;
+
+        if ($('.conversation-inner ul')[0]) {
+          $('.conversation-inner ul')[0].scrollTop = $('.conversation-inner ul')[0].scrollHeight;
         }
+
       } else if (e.detail.entities.group) {
+
         e.detail.entities.group.forEach(function (group, index) {
+
           var current = iris.unread;
           iris.unread += group.unread;
 
@@ -125,6 +129,11 @@
 
           }
         });
+
+        if ($('.group.active .conversation-inner ul')[0]) {
+          $('.group.active .conversation-inner ul')[0].scrollTop = $('.group.active .conversation-inner ul')[0].scrollHeight;
+        }
+
       } else if (e.detail.entities.user) {
         e.detail.entities.user.forEach(function (user) {
           if (user.eid !== parseInt(iris.credentials.userid)) {
@@ -178,7 +187,7 @@
       $.get(iris.server + '/read-group/' + groupid + '/' + iris.credentials.userid);
       iris.currentGroup = groupid;
       iris.setActiveGroup(groupid, false);
-      iris.fetchEntities("messages", {
+      iris.fetchEntities("messages-" + groupid, {
         entities: ["message"],
         queries: [{
           "field": "groups",

@@ -2,8 +2,7 @@
   border:1px solid #aaa;
 }
 #conversation {
-  height: 260px;
-  margin-top:40px;
+  height: 300px;
 }
 .conversation-inner, .message-window {
   height:100%;
@@ -29,7 +28,10 @@ li.group:hover {
   cursor: pointer;
   text-decoration: underline;
 }
-
+.group-messages {
+  list-style:none;
+  padding-left:0;
+}
 .image-container {
   width: 40px;
   height: 40px;
@@ -117,11 +119,18 @@ li.group:hover {
   width: 250px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 #grouplist li .image-container {
   margin-right: 5px;
+}
+
+#grouplist .group-name {
+  width: 185px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
 }
 
 #grouplist li a:hover {
@@ -157,11 +166,19 @@ li.group:hover {
   overflow: hidden;
 }
 
-.message-window ul {
-  height:calc(100% - 50px);
+.conversation-inner ul {
+  height:calc(100% - 80px);
   overflow-y:auto;
+  position:relative;
+  top:30px;
 }
 
+#chat-panel .group-messages > li {
+  display: none;
+}
+#chat-panel .group-messages > li.active {
+  display:block;
+}
 .group-action {
   float: left;
   margin-right: 8px;
@@ -178,6 +195,7 @@ li.group:hover {
   position:absolute;
   bottom: 0;
   width:100%;
+  margin-bottom:0;
 }
 .submit-message-from .message-textfield,
 .user-submit-message-from .message-textfield {
@@ -596,6 +614,9 @@ section.chat-window #fileupload {
   z-index: 9;
 }
 
+#chat-panel > div {
+  position: relative;
+}
 #chat-panel.expanded #hangup{
 	margin:0;
 	position:absolute;

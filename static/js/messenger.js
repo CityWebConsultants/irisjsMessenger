@@ -20,7 +20,17 @@
       
       $scope.displayUser = function (eid) {
     	  return iris.theme.getUserInfo(eid);
+      }
+
+      $scope.getGroupMessages = function(gid) {
+
+        if (typeof iris.fetched['messages-' + gid] != 'undefined' && typeof iris.fetched['messages-' + gid].entities != 'undefined') {
+            return iris.fetched['messages-' + gid].entities;
         }
+        else {
+          return [];
+        }
+      }
 
       iris.currentGroup = null;
       $scope.currentGroup = iris.currentGroup;
@@ -48,4 +58,4 @@
 
   });
   
-})(jQuery);;
+})(jQuery);

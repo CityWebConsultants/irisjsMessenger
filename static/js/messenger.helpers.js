@@ -32,6 +32,10 @@
     iris.setActiveGroup = function (groupId, click) {
       iris.togglerecent();
       $('#grouplist .group').removeClass('active');
+
+      $('#chat-panel .group-messages > li').removeClass('active');
+      $('#chat-panel .group-messages li[data-group=' + groupId + ']').addClass('active');
+
       setTimeout(function () {
         $('#grouplist .group[data-group=' + groupId + ']').addClass('active');
         if (click !== false) {

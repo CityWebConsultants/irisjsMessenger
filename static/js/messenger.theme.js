@@ -175,7 +175,7 @@ iris.theme.GroupListItem = function (group, $scope) {
   html += '  <span class="image-container online-surround ' + online + '">';
   html += '    <img src="' + group.field_avatar + '">';
   html += '  </span>';
-  html += '  <span>' + name + '</span> <span class="unread">';
+  html += '  <span class="group-name">' + name + '</span> <span class="unread">';
   if (group.unread && group.unread > 0) {
     html += group.unread;
   }
