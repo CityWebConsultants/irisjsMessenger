@@ -22,6 +22,13 @@
     	  return iris.theme.getUserInfo(eid);
       }
 
+      $scope.displayMessage = function (message) {
+
+        var output = iris.theme.ChatMessage(message);
+        return $sce.trustAsHtml(output);
+
+      }
+
       $scope.getGroupMessages = function(gid) {
 
         if (typeof iris.fetched['messages-' + gid] != 'undefined' && typeof iris.fetched['messages-' + gid].entities != 'undefined') {
@@ -34,6 +41,23 @@
 
       iris.currentGroup = null;
       $scope.currentGroup = iris.currentGroup;
+
+      $scope['messages'] = [];
+
+      iris.updateMessages = function(messages) {
+
+        $scope['messages'] = messages;
+        $scope.$apply();
+
+        setTimeout(function() {
+            if ($('.conversation-inner ul')[0]) {
+                $('.conversation-inner ul')[0].scrollTop = $('.conversation-inner ul')[0].scrollHeight;
+            }
+        },30)
+
+      }
+
+      //iris.fetched['messages'] = {};
       
       iris.fetchEntities("groups", {
         entities: ["group"],
@@ -47,6 +71,19 @@
         },
 
       });
+
+     /* iris.fetchEntities("messages", {
+        entities: ["message"],
+        queries: [{
+          "field": "groups",
+          "operator": "includes",
+          "value": groupid
+        }],
+        sort: {
+          field_created: 'asc'
+        }
+
+      });*/
 
       iris.fetchEntities("users", {
 

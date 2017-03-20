@@ -51,10 +51,6 @@
       </div>
       <div id="chat-panel" class="active">
 
-        <div ng-controller="iris-template" ng-iris-template="groups">
-          <ul class="group-messages" >
-            <li class="group" data-group="{[{group.eid}]}" class="group" ng-repeat="group in groups">
-
               <!--<div class="mediacall-window-surround window-surround" style="display: none;">
                 <div class="calling"><span class="glyphicon glyphicon-earphone"></span><span><?php print t('Calling'); ?></span></div>
                 <div id='mediacall-window'></div>
@@ -68,7 +64,7 @@
                 <div id='group-header'>
                   <div class="member-count-surround">
 
-                    <div class="closed" ng-controller="iris-template" ng-iris-template="members-{[{group.eid}]}">
+                    <div class="closed" ng-controller="iris-template" ng-iris-template="members">
                       <span class="members-view glyphicon glyphicon-user"></span><span id='member-count' ng-bind="members[0].field_users.length"></span>
                       <ul>
                         <li ng-repeat="member in members[0].field_users" ng-bind="displayUser(member.field_uid).username"></li>
@@ -82,19 +78,53 @@
                 </div>
                 <div id='conversation' data-groupid>
 
-                  <div class="conversation-inner" ng-controller="iris-template" ng-iris-template="messages-{[{group.eid}]}">
+                  <div class="conversation-inner">
 
                     <!--<div class="message-window" ng-if="messages-{[{group.eid}]}">-->
 
-                      <ul style="list-style: none">
-                        <li ng-repeat="message in getGroupMessages(group.eid)" style="margin: 10px;">
-                          <span><img ng-src="message.eid" style="width: 30px; height: 30px;"/> <span ng-bind="displayUser(message.entityAuthor).username"></span>: <span ng-bind="message.content"></span></span>
-                        </li>
+                      <ul>
+
+                        <li ng-bind-html="displayMessage(message)" ng-repeat="message in messages"></li>
+
                       </ul>
 
                     <!--</div>-->
                   </div>
 
+                  <form class='submit-message-from hide'>
+
+                    <input class='message-send' type='submit' value='send' />
+                    <div class='submit-message-box'>
+                      <span id="typing"></span>
+                      <input class='message-textfield' id='messageinput' name="message" autocomplete='off' />
+                    </div>
+                  </form>
+
+                  <!-- The below buttons have yet to be implemented -->
+                  <ul class='group-actions'>
+                    <li class='group-action group-action-in-bar group-action-add-user' style="display:none;">
+                      <a><span class='glyphicon glyphicon-plus' aria-hidden='true'></span>Add user</a>
+                    </li>
+                    <li class='group-action group-action-in-bar group-action-rename' style="display:none;">
+                      <a><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span>Rename group</a>
+                    </li>
+                    <li class='group-action group-action-in-bar group-action-leave' style="display:none;">
+                      <a><span class='glyphicon glyphicon-log-out' aria-hidden='true'></span>Leave group</a>
+                    </li>
+                    <li class='group-action group-action-in-bar group-action-send-file' style="display:none;">
+                      <a><span class="glyphicon glyphicon-file" aria-hidden="true"></span>Send file</a>
+                    </li>
+                    <li class='group-action group-action-in-bar group-action-voicecall' style="display:none;">
+                      <a><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>Call></a>
+                    </li>
+                    <li class='group-action group-action-in-bar group-action-videocall' style="display:none;">
+                      <a><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>Video call</a>
+                    </li>
+                  </ul>
+
+                  <div id="fileupload" style="display: none">
+                    <input type="file" id="files" name="files[]" />
+                  </div>
                 </div>
 
               </div>
@@ -107,45 +137,6 @@
                     </li>
                   </ul>
               </div>-->
-            </li>
-          </ul>
-
-          <form class='submit-message-from'>
-
-            <input class='message-send' type='submit' value='send' />
-            <div class='submit-message-box'>
-              <span id="typing"></span>
-              <input class='message-textfield' id='messageinput' name="message" autocomplete='off' />
-            </div>
-          </form>
-
-          <!-- The below buttons have yet to be implemented -->
-          <ul class='group-actions'>
-            <li class='group-action group-action-in-bar group-action-add-user' style="display:none;">
-              <a><span class='glyphicon glyphicon-plus' aria-hidden='true'></span>Add user</a>
-            </li>
-            <li class='group-action group-action-in-bar group-action-rename' style="display:none;">
-              <a><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span>Rename group</a>
-            </li>
-            <li class='group-action group-action-in-bar group-action-leave' style="display:none;">
-              <a><span class='glyphicon glyphicon-log-out' aria-hidden='true'></span>Leave group</a>
-            </li>
-            <li class='group-action group-action-in-bar group-action-send-file' style="display:none;">
-              <a><span class="glyphicon glyphicon-file" aria-hidden="true"></span>Send file</a>
-            </li>
-            <li class='group-action group-action-in-bar group-action-voicecall' style="display:none;">
-              <a><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>Call></a>
-            </li>
-            <li class='group-action group-action-in-bar group-action-videocall' style="display:none;">
-              <a><span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>Video call</a>
-            </li>
-          </ul>
-
-          <div id="fileupload" style="display: none">
-            <input type="file" id="files" name="files[]" />
-          </div>
-        </div>
-
 
       </div>
     </section>

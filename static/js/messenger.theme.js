@@ -7,7 +7,7 @@ iris.theme.GenericUserImage = function () {
 
   var html = '';
 
-  html += "/sites/all/themes/hub/img/hub-picture-default.png";
+  html += '<i class="glyphicon glyphicon-user"></i>';
 
   return html;
 
@@ -17,7 +17,7 @@ iris.theme.GenericGroupImage = function () {
 
   var html = '';
 
-  html += "/sites/all/themes/hub/img/hub-group.png";
+  html += '<i class="glyphicon glyphicon-user"></i>';
 
   return html;
 
@@ -27,7 +27,7 @@ iris.theme.GenericReadOnlyImage = function () {
 
   var html = '';
 
-  html += "/sites/all/themes/hub/img/hub-icon.png";
+  html += '<i class="glyphicon glyphicon-user"></i>';
 
   return html;
 
@@ -37,32 +37,41 @@ iris.theme.GenericReadOnlyImage = function () {
  * Provide the HTML to create chat messages.
  */
 iris.theme.ChatMessage = function (message) {
+
+  if (!message.content) {
+    return false;
+  }
   var html = '';
 
-  var time = chat.mongotime(message._id);
-  var formattedtime = chat.formatTime(time);
+  var time = moment(message.field_created);// chat.formatTime(time);
 
-  html += '<div class="message" data-messageid="' + message._id + '" data-userid="' + message.userid + '" data-toggle="tooltip" title="' + formattedtime.date + ' ' + formattedtime.time + '">';
+  html += '<div class="message" data-messageid="' + message._id + '" data-userid="' + message.entityAuthor + '" data-toggle="tooltip" title="' + time.fromNow() + '">';
 
-  jQuery.each(message.content, function (index, content) {
+  if (typeof message.content != 'object') {
+    message.content = {text: message.content}
+  }
+
+  jQuery.each(message.content, function (index, messageContent) {
 
     if (iris.theme.MessageTemplate[index]) {
 
-      html += iris.theme.MessageTemplate[index]({
-        content: content,
-        formattedtime: formattedtime,
-        username: message.username
+      html = iris.theme.MessageTemplate[index]({
+        content: messageContent,
+        formattedtime: time, //formattedtime,
+        username: iris.fetchedEntities.user[message.entityAuthor].username
       });
 
     }
 
   });
-  if (chat.user.id === message.userid && message.content.text) {
+
+  /*if ( === message.userid && message.content.text) {
     html += '<span class="message-tools">';
     html += '<span class="glyphicon glyphicon-pencil editmessage"aria-hidden="true" title="' + 'Edit' + '" data-toggle="tooltip"></span>';
     html += '<span class="glyphicon glyphicon-trash editmessage"aria-hidden="true" title="' + 'Delete' + '" data-toggle="tooltip"></span>';
     html += '</span>';
-  }
+  }*/
+
   html += '</div>';
   return html;
 };
@@ -129,6 +138,7 @@ iris.theme.GroupListItem = function (group, $scope) {
     }
   }*/
 
+  var clone = JSON.parse(JSON.stringify(group));
   if (!group.field_avatar) {
     /*if (group.isReadOnly) {
       // Generic Hub group image
@@ -136,11 +146,14 @@ iris.theme.GroupListItem = function (group, $scope) {
     } else */
     if (group.field_121) {
       // Generic user profile image
-      group.field_avatar = iris.theme.GenericUserImage();
+      $img = clone.field_avatar = iris.theme.GenericUserImage();
     } else {
       // Image used for ad hoc groups
-      group.field_avatar = iris.theme.GenericGroupImage();
+      $img = clone.field_avatar = iris.theme.GenericGroupImage();
     }
+  }
+  else {
+    $img = '<img src="' + clone.field_avatar + '">'
   }
 
   var printclasses = '';
@@ -173,7 +186,7 @@ iris.theme.GroupListItem = function (group, $scope) {
   
 
   html += '  <span class="image-container online-surround ' + online + '">';
-  html += '    <img src="' + group.field_avatar + '">';
+  html +=      $img;
   html += '  </span>';
   html += '  <span class="group-name">' + name + '</span> <span class="unread">';
   if (group.unread && group.unread > 0) {
@@ -204,9 +217,9 @@ iris.theme.UserSearchItem = function (user, $scope) {
   }*/
 
   if (user.field_avatar) {
-    html += '  <span class="image-container ' + onlineclasses + '"><img src="' + user.field_avatar + '"></span>';
+    html += '  <span class="image-container ' + onlineclasses + '">' + user.field_avatar + '</span>';
   } else {
-    html += '  <span class="image-container ' + onlineclasses + '"><img src="' + iris.theme.GenericUserImage() + '"></span>';
+    html += '  <span class="image-container ' + onlineclasses + '">' + iris.theme.GenericUserImage() + '</span>';
   }
   html += '<span class="name">' + user.username + '</span>';
   if (iris.currentGroup && iris.fetchedEntities.group[iris.currentGroup].entityAuthor == iris.credentials.userid) {
@@ -262,9 +275,9 @@ iris.theme.GroupMemberListItem = function (user, group) {
 
   html += '<li data-userid="' + user.uid + '">';
   if (user.avatar) {
-    html += '<span class="image-container ' + onlineclasses + '"><img src="' + user.avatar + '"></span>';
+    html += '<span class="image-container ' + onlineclasses + '">' + user.avatar + '</span>';
   } else {
-    html += '<span class="image-container ' + onlineclasses + '"><img src="' + iris.theme.GenericUserImage() + '"></span>';
+    html += '<span class="image-container ' + onlineclasses + '">' + iris.theme.GenericUserImage() + '</span>';
   }
   html += user.username;
   if (!group.isReadOnly) {
@@ -294,9 +307,15 @@ iris.theme.MessageTemplate = {};
 iris.theme.MessageTemplate.text = function (contents) {
 
   var html = '';
+  if (typeof contents.content.text != 'undefined') {
+    var text = contents.content.text;
+  }
+  else {
+    var text = contents.content;
+  }
 
-  html += '<span class="author" title="at ' + contents.formattedtime.date + ' ' + contents.formattedtime.time + '">' + contents.username + '</span>: ';
-  html += '<span class="message-content">' + contents.content + '</span>';
+  html += '<span class="author" title="' + contents.formattedtime.fromNow() + '">' + contents.username + '</span>: ';
+  html += '<div class="message-content">' + String(text) + '</div>';
 
   return html;
 }
@@ -310,7 +329,7 @@ iris.theme.MessageTemplate.file = function (contents) {
   fileinfo.size = (fileinfo.size / 1000000).toFixed(2);
 
   html += '<span class="author" title="at ' + contents.formattedtime.date + ' ' + contents.formattedtime.time + '">' + contents.username + '</span>: ';
-  html += '<span class="message-content">' + "<a  class='filelink' href='javascript:void(0)' data-id='" + fileinfo.id + "' data-size='" + fileinfo.size + "' data-peer='" + fileinfo.peerid + "' data-groupid='" + fileinfo.groupid + "'>" + fileinfo.name + " " + "(" + fileinfo.size + "MB)" + '</span>';
+  html += '<div class="message-content">' + "<a  class='filelink' href='javascript:void(0)' data-id='" + fileinfo.id + "' data-size='" + fileinfo.size + "' data-peer='" + fileinfo.peerid + "' data-groupid='" + fileinfo.groupid + "'>" + fileinfo.name + " " + "(" + fileinfo.size + "MB)" + '</div>';
 
   return html;
 }

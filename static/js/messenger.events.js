@@ -85,20 +85,27 @@
     }
 
     document.addEventListener('entityListUpdate', function (e) {
-      if (e.detail.entities.message) {
+      if (typeof e.detail.entities.message != 'undefined') {
 
-        if ($('.conversation-inner ul')[0]) {
-          $('.conversation-inner ul')[0].scrollTop = $('.conversation-inner ul')[0].scrollHeight;
+        if (e.detail.entities.message[0].groups.indexOf(iris.currentGroup) > -1) {
+          iris.updateMessages(iris.fetched['messages-' + iris.currentGroup].entities);
         }
 
-      } else if (e.detail.entities.group) {
+      } else if (typeof e.detail.entities.group != 'undefined') {
 
         e.detail.entities.group.forEach(function (group, index) {
 
-          var current = iris.unread;
-          iris.unread += group.unread;
+          if (group.eid !== iris.currentGroup) {
+            var current = iris.unread;
+            iris.unread += group.unread;
+          }
+          else {
+            group.unread = '';
+          }
 
-          var groupUsers = iris.getGroupUserIds(iris.fetchedEntities.group[group.eid].field_users);
+          $('.unread', $('#grouplist li[data-group=' + group.eid + ']')).text(group.unread);
+
+          /*var groupUsers = iris.getGroupUserIds(iris.fetchedEntities.group[group.eid].field_users);
           var onlineGroupUsersArray = intersection_destructive(groupUsers, Object.keys(iris.online));
           onlineGroupUsersArray.remove(parseInt(iris.credentials.userid));
 
@@ -112,7 +119,7 @@
             iris.fetchedEntities.group[group.eid].online = onlineGroupUsers;
           } else if (iris.fetchedEntities.group[group.eid].online) {
             delete iris.fetchedEntities.group[group.eid].online;
-          }
+          }*/
 
 
           if (current === 0 && iris.unread > 0) {
@@ -143,7 +150,7 @@
               iris.updateGroupOnline(user.eid, 'online');
 
             } else if (iris.online[user.eid]) {
-              iris.updateGroupOnline(user.eid);
+              iris.updateGroupOnline(user.eid, 'online');
             }
           }
         });
@@ -183,7 +190,10 @@
     }
 
     $("body").on("click", "#grouplist .group", function (e) {
+
+      $('.submit-message-from').removeClass('hide');
       var groupid = jQuery(this).data("group");
+
       $.get(iris.server + '/read-group/' + groupid + '/' + iris.credentials.userid);
       iris.currentGroup = groupid;
       iris.setActiveGroup(groupid, false);
@@ -345,8 +355,13 @@
     });
 
 
-    jQuery(".lookup-title.recent").click(iris.togglerecent);
-    jQuery(".lookup-title.search").click(iris.togglesearch);
+    jQuery(".lookup-title.recent").click(function() {
+      iris.togglerecent();
+    });
+
+    jQuery(".lookup-title.search a").click(function() {
+      iris.togglesearch();
+    });
 
   });
 }(jQuery))

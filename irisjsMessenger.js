@@ -215,7 +215,9 @@ iris.modules.irisjsMessenger.registerHook("hook_socket_authenticated", 1, functi
  */
 iris.modules.irisjsMessenger.registerHook("hook_socket_disconnected", 1, function (thisHook, data) {
 
-  iris.sendSocketMessage(['*'], 'userDisconnect', thisHook.context.userid);
+  if (thisHook.authPass.userid !== "anon") {
+    iris.sendSocketMessage(['*'], 'userDisconnect', thisHook.authPass.userid);
+  }
 
   thisHook.pass(data);
 
@@ -249,11 +251,17 @@ iris.modules.irisjsMessenger.registerHook("hook_block_render", 0, function (this
       rank: 2
     };
 
-    /*thisHook.context.context.tags.headTags["messenger.hook"] = {
+    thisHook.context.context.tags.headTags["moment"] = {
       type: "script",
-      attributes: {"src": "/modules/irisjsMessenger/js/messenger.hook.js"},
+      attributes: {"src": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"},
+      rank: 1
+    };
+
+    thisHook.context.context.tags.headTags["moment-local"] = {
+      type: "script",
+      attributes: {"src": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/locale/en-gb.js"},
       rank: 2
-    };*/
+    };
 
     thisHook.context.context.tags.headTags["messenger.events"] = {
       type: "script",

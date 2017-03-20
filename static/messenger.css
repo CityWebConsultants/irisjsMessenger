@@ -113,10 +113,14 @@ li.group:hover {
   color:#333;
 }
 
+#grouplist .unread {
+  background:#bbb;
+  padding:2px 6px;
+  border-radius: 5px;
+}
 #grouplist li {
   margin-bottom: 5px;
   font-size: 14px;
-  width: 250px;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -125,8 +129,9 @@ li.group:hover {
   margin-right: 5px;
 }
 
+.user .name,
 #grouplist .group-name {
-  width: 185px;
+  width: calc(100% - 73px);
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -171,8 +176,12 @@ li.group:hover {
   overflow-y:auto;
   position:relative;
   top:30px;
+  list-style: none;
+  padding-left:5px;
 }
-
+.conversation-inner .author {
+  color:#999;
+}
 #chat-panel .group-messages > li {
   display: none;
 }
@@ -196,6 +205,10 @@ li.group:hover {
   bottom: 0;
   width:100%;
   margin-bottom:0;
+}
+
+.submit-message-from.hide {
+  display:none;
 }
 .submit-message-from .message-textfield,
 .user-submit-message-from .message-textfield {
@@ -254,10 +267,6 @@ li.group:hover {
 
 #chat-search-pane .user .glyphicon {
   cursor: pointer;
-  float: right;
-  top: 11px;
-  right: 10px;
-  font-size: 16px;
 }
 
 .chat-window .online-surround {
@@ -272,6 +281,19 @@ li.group:hover {
   margin: 10px;
 }
 
+#chat-search ul {
+  padding-left:7px;
+}
+
+#chat-search-pane .image-container,
+#grouplist .image-container {
+  text-align: center;
+}
+
+#chat-search-pane .image-container .glyphicon,
+#grouplist .image-container .glyphicon {
+  font-size:30px;
+}
 .message-tools {
   float: right;
 }
@@ -530,6 +552,10 @@ section.chat-window #fileupload {
   border-radius: 3px;
   padding: 5px;
   margin-bottom: 5px;
+}
+
+.message-content {
+  padding-left:10px;
 }
 
 #mediacallbuttons {

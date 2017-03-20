@@ -31,6 +31,8 @@
 
     iris.setActiveGroup = function (groupId, click) {
       iris.togglerecent();
+
+
       $('#grouplist .group').removeClass('active');
 
       $('#chat-panel .group-messages > li').removeClass('active');
